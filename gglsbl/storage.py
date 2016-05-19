@@ -11,7 +11,7 @@ log.addHandler(logging.NullHandler())
 class StorageBase(object):
     @staticmethod
     def compress_ranges(nums):
-        """Compress consequtive ranges in sequence of numbers
+        """Compress consecutive ranges in sequence of numbers
 
         E.g. [1,2,3,4,7] -> '1-4,7'
         """
@@ -158,6 +158,7 @@ class SqliteStorage(StorageBase):
                 q = "INSERT INTO full_hash (value, list_name, downloaded_at, expires_at)\
                     VALUES (?, ?, current_timestamp, datetime(current_timestamp, '+%d SECONDS'))"
                 self.dbc.execute(q % cache_lifetime, [sqlite3.Binary(hash_value), list_name])
+
         q = "UPDATE hash_prefix SET full_hash_expires_at=datetime(current_timestamp, '+%d SECONDS') \
             WHERE chunk_type='add' AND value=?"
         self.dbc.execute(q % cache_lifetime, [sqlite3.Binary(hash_prefix)])
